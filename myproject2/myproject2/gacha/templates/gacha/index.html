@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ガチャ演出</title>
+  <style>
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #222, #444);
+    }
+
+    #card {
+      width: 200px;
+      height: 300px;
+      perspective: 1000px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.8s ease;
+      position: relative;
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      border: 2px solid #fff;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #555, #333);
+      color: #fff;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      background: linear-gradient(145deg, #ffd700, #cc9900);
+      color: black;
+    }
+
+    /* ガチャのスピン（加速 → 減速） */
+    .spin {
+      animation: spinAnim 2.5s cubic-bezier(0.41, 0.31, 0.21, 0.11) forwards;
+    }
+
+    @keyframes spinAnim {
+      0%   { transform: rotateY(0deg); }
+      20%  { transform: rotateY(720deg) scale(1.05); }
+      80%  { transform: rotateY(2160deg) scale(1.05); }
+      100% { transform: rotateY(2520deg); }
+    }
+
+    /* 光のエフェクト */
+    .glow {
+      box-shadow: 0 0 20px 5px rgba(255, 215, 0, 0.8);
+    }
+
+    #video-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #video-container video {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+      margin: auto;
+      border-radius: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      background: #ff5722;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="card">
+      <div class="card-inner" id="card-inner">
+        <div class="card-front">???</div>
+        <div class="card-back">結果</div>
+      </div>
+      <div id="video-container"></div>
+    </div>
+    <button id="draw-btn">ガチャを引く</button>
+  </div>
+  <script src="/static/gacha/js/gacha.js"></script>
+</body>
+</html>
