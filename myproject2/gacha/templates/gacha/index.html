@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ガチャ</title>
+<style>
+  #video-container, #result-img {
+    margin-top: 20px;
+    text-align: center;
+  }
+  #video-container video {
+    width: 400px;
+    height: auto;
+  }
+  #result-img img {
+    width: 200px;
+    height: auto;
+  }
+</style>
+</head>
+<body>
+<h1>ガチャ抽選</h1>
+<button id="draw-btn">抽選</button>
+
+<div id="video-container"></div>
+<div id="result-img"></div>
+
+<script>
+const drawBtn = document.getElementById("draw-btn");
+const videoContainer = document.getElementById("video-container");
+const resultImgContainer = document.getElementById("result-img");
+
+function playGachaVideo(videoUrl, imageUrl, itemName, rarity) {
+    videoContainer.innerHTML = "";
+    resultImgContainer.innerHTML = "";
+
+    const video = document.createElement("video");
+    video.src = videoUrl;
+    video.autoplay = true;
+    video.controls = false;
+    videoContainer.appendChild(video);
+
+    video.addEventListener("ended", () => {
+        // 動画を削除
+        videoContainer.innerHTML = "";
+
+        // 結果画像表示
+        const img = document.createElement("img");
+        img.src = imageUrl;
+        resultImgContainer.appendChild(img);
+
+        // アイテム名とレアリティ表示
+        const info = document.createElement("div");
+        info.style.marginTop = "10px";
+        info.style.fontSize = "18px";
+        info.style.fontWeight = "bold";
+        info.innerText = `${rarity} : ${itemName}`;
+        resultImgContainer.appendChild(info);
+    });
+}
+
+drawBtn.addEventListener("click", async () => {
+    try {
+        const res = await fetch("/api/gacha/draw/");
+        const data = await res.json();
+        playGachaVideo(data.video, data.image, data.item, data.rarity);
+    } catch (err) {
+        console.error(err);
+    }
+});
+</script>
+</body>
+</html>
